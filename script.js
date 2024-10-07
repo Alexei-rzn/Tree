@@ -17,6 +17,14 @@ function openModal() {
 
 function closeModal() {
     document.getElementById('modal').classList.add('hidden');
+    clearModalInputs(); // Очищаем поля ввода после закрытия
+}
+
+function clearModalInputs() {
+    document.getElementById('name').value = '';
+    document.getElementById('year').value = '';
+    document.getElementById('location').value = '';
+    document.getElementById('status').value = '';
 }
 
 document.getElementById('submit').addEventListener('click', function() {
@@ -39,7 +47,7 @@ document.getElementById('submit').addEventListener('click', function() {
 
     members.push(member);
     drawMember(member);
-    closeModal();
+    closeModal(); // Закрыть модальное окно после добавления
 });
 
 function drawMember(member) {
