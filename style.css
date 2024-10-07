@@ -31,3 +31,10 @@ body {
     color: white;
     cursor: pointer;
 }
+
+.line-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* Чтобы клики не перекрывали линии */
+}
