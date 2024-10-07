@@ -7,39 +7,40 @@ let isDrawingLine = false;
 lineCanvas.width = document.getElementById('canvas').offsetWidth;
 lineCanvas.height = document.getElementById('canvas').offsetHeight;
 
-document.getElementById('addMember').addEventListener('click', addMember);
+document.getElementById('addMember').addEventListener('click', openModal);
 document.getElementById('lineButton').addEventListener('click', toggleLineDrawing);
+document.querySelector('.close-button').addEventListener('click', closeModal);
 
-function addMember() {
-    const form = document.createElement('div');
-    form.innerHTML = `
-        <label>ФИО:</label><input type="text" id="name" required><br>
-        <label>Год рождения:</label><input type="number" id="year"><br>
-        <label>Место жительства:</label><input type="text" id="location"><br>
-        <label>Статус:</label><input type="text" id="status"><br>
-        <button id="submit">Добавить</button>
-    `;
-    document.body.appendChild(form);
-
-    // Обработка добавления члена семьи
-    document.getElementById('submit').addEventListener('click', function() {
-        const name = document.getElementById('name').value;
-        const year = document.getElementById('year').value;
-        const location = document.getElementById('location').value;
-        const status = document.getElementById('status').value;
-
-        const member = {
-            id: members.length,
-            name: `${name}\nГод: ${year}\nЖитель: ${location}\nСтатус: ${status}`,
-            x: Math.random() * (lineCanvas.width - 150),
-            y: Math.random() * (lineCanvas.height - 100),
-        };
-
-        members.push(member);
-        drawMember(member);
-        document.body.removeChild(form);
-    });
+function openModal() {
+    document.getElementById('modal').classList.remove('hidden');
 }
+
+function closeModal() {
+    document.getElementById('modal').classList.add('hidden');
+}
+
+document.getElementById('submit').addEventListener('click', function() {
+    const name = document.getElementById('name').value;
+    const year = document.getElementById('year').value;
+    const location = document.getElementById('location').value;
+    const status = document.getElementById('status').value;
+
+    if (!name) {
+        alert("ФИО обязательно!");
+        return;
+    }
+
+    const member = {
+        id: members.length,
+        name: `${name}\nГод: ${year}\nЖитель: ${location}\nСтатус: ${status}`,
+        x: Math.random() * (lineCanvas.width - 150),
+        y: Math.random() * (lineCanvas.height - 100),
+    };
+
+    members.push(member);
+    drawMember(member);
+    closeModal();
+});
 
 function drawMember(member) {
     const rectangle = document.createElement('div');
