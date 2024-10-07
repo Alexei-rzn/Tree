@@ -9,7 +9,7 @@ lineCanvas.height = document.getElementById('canvas').offsetHeight;
 
 document.getElementById('addMember').addEventListener('click', openModal);
 document.getElementById('lineButton').addEventListener('click', toggleLineDrawing);
-document.querySelector('.close-button').addEventListener('click', closeModal);
+document.getElementById('closeModal').addEventListener('click', closeModal);
 
 function openModal() {
     document.getElementById('modal').classList.remove('hidden');
