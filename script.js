@@ -1,92 +1,63 @@
+const addMemberBtn = document.getElementById('add-member-btn');
+const addMemberModal = document.getElementById('add-member-modal');
+const closeModal = document.getElementById('close-modal');
+const memberForm = document.getElementById('member-form');
+const treeContainer = document.getElementById('tree-container');
+const canvas = document.getElementById('connections');
+const connectMembersBtn = document.getElementById('connect-members-btn');
+
 let members = [];
-const lineCanvas = document.getElementById('lineCanvas');
-const ctx = lineCanvas.getContext('2d');
-const selectedMembers = new Set();
-let isDrawingLine = false;
+let selectedMembers = [];
+let isConnecting = false;
+let ctx = canvas.getContext('2d');
 
-lineCanvas.width = document.getElementById('canvas').offsetWidth;
-lineCanvas.height = document.getElementById('canvas').offsetHeight;
-
-document.getElementById('addMember').addEventListener('click', openModal);
-document.getElementById('lineButton').addEventListener('click', toggleLineDrawing);
-document.getElementById('closeModal').addEventListener('click', closeModal);
-
-function openModal() {
-    document.getElementById('modal').classList.remove('hidden');
-}
-
-function closeModal() {
-    document.getElementById('modal').classList.add('hidden');
-    clearModalInputs(); // Очищаем поля ввода после закрытия
-}
-
-function clearModalInputs() {
-    document.getElementById('name').value = '';
-    document.getElementById('year').value = '';
-    document.getElementById('location').value = '';
-    document.getElementById('status').value = '';
-}
-
-document.getElementById('submit').addEventListener('click', function() {
-    const name = document.getElementById('name').value;
-    const year = document.getElementById('year').value;
-    const location = document.getElementById('location').value;
-    const status = document.getElementById('status').value;
-
-    if (!name) {
-        alert("ФИО обязательно!");
-        return;
-    }
-
-    const member = {
-        id: members.length,
-        name: `${name}\nГод: ${year}\nЖитель: ${location}\nСтатус: ${status}`,
-        x: Math.random() * (lineCanvas.width - 150),
-        y: Math.random() * (lineCanvas.height - 100),
-    };
-
-    members.push(member);
-    drawMember(member);
-    closeModal(); // Закрыть модальное окно после добавления
+// Open modal to add member
+addMemberBtn.addEventListener('click', () => {
+    addMemberModal.style.display = 'flex';
 });
 
-function drawMember(member) {
-    const rectangle = document.createElement('div');
-    rectangle.className = 'rectangle';
-    rectangle.innerText = member.name;
-    rectangle.style.width = '150px';
-    rectangle.style.height = '100px';
-    rectangle.style.left = member.x + 'px';
-    rectangle.style.top = member.y + 'px';
+// Close modal
+closeModal.addEventListener('click', () => {
+    addMemberModal.style.display = 'none';
+});
 
-    rectangle.onmousedown = rectangle.ontouchstart = function(event) {
-        event.preventDefault();
-        dragAndDrop(rectangle, member);
+// Add new member
+memberForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const year = document.getElementById('year').value;
+    const city = document.getElementById('city').value;
+    const status = document.getElementById('status').value;
+
+    const memberDiv = document.createElement('div');
+    memberDiv.classList.add('member');
+    memberDiv.innerHTML = `<p>${name}</p><p>${year}</p><p>${city}</p><p>${status}</p>`;
+
+    memberDiv.style.left = '50px';
+    memberDiv.style.top = '50px';
+
+    // Enable drag and drop for members
+    memberDiv.onmousedown = (event) => {
+        dragMember(event, memberDiv);
     };
 
-    rectangle.onclick = function() {
-        if (isDrawingLine) {
-            selectedMembers.has(member.id) ? selectedMembers.delete(member.id) : selectedMembers.add(member.id);
-            rectangle.style.borderColor = selectedMembers.has(member.id) ? 'red' : 'black';
-            drawLines();
-        }
-    };
+    treeContainer.appendChild(memberDiv);
+    members.push(memberDiv);
 
-    document.getElementById('canvas').appendChild(rectangle);
-    drawLines();
-}
+    addMemberModal.style.display = 'none';
+});
 
-function dragAndDrop(element, member) {
-    let shiftX = event.clientX - element.getBoundingClientRect().left;
-    let shiftY = event.clientY - element.getBoundingClientRect().top;
+// Drag member function
+function dragMember(event, member) {
+    let shiftX = event.clientX - member.getBoundingClientRect().left;
+    let shiftY = event.clientY - member.getBoundingClientRect().top;
+
+    moveAt(event.pageX, event.pageY);
 
     function moveAt(pageX, pageY) {
-        element.style.left = pageX - shiftX + 'px';
-        element.style.top = pageY - shiftY + 'px';
-
-        member.x = pageX - shiftX;
-        member.y = pageY - shiftY;
-        drawLines();
+        member.style.left = pageX - shiftX + 'px';
+        member.style.top = pageY - shiftY + 'px';
     }
 
     function onMouseMove(event) {
@@ -94,65 +65,67 @@ function dragAndDrop(element, member) {
     }
 
     document.addEventListener('mousemove', onMouseMove);
-    element.onmouseup = function() {
+
+    member.onmouseup = () => {
         document.removeEventListener('mousemove', onMouseMove);
-        element.onmouseup = null;
-    };
-
-    // Обработка сенсорных событий
-    element.ontouchstart = function(event) {
-        event.preventDefault();
-        moveAt(event.touches[0].pageX, event.touches[0].pageY);
-        onMouseMove(event.touches[0]);
-    };
-
-    document.ontouchmove = function(event) {
-        if (event.touches.length) {
-            moveAt(event.touches[0].pageX, event.touches[0].pageY);
-        }
-    };
-
-    document.ontouchend = function() {
-        document.ontouchmove = null;
-        document.ontouchend = null;
+        member.onmouseup = null;
     };
 }
 
-function toggleLineDrawing() {
-    isDrawingLine = !isDrawingLine;
-    const buttonText = isDrawingLine ? "Сохранить линию" : "Линия";
-    document.getElementById('lineButton').innerText = buttonText;
+// Handle connection mode
+connectMembersBtn.addEventListener('click', () => {
+    isConnecting = !isConnecting;
+    selectedMembers = [];
 
-    if (!isDrawingLine) {
-        selectedMembers.clear();
-        drawLines();
+    if (isConnecting) {
+        connectMembersBtn.style.backgroundColor = '#FF5722';
+    } else {
+        connectMembersBtn.style.backgroundColor = '#2196F3';
+        drawConnections();
     }
-}
-
-function drawLines() {
-    ctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
-    const selectedArray = Array.from(selectedMembers);
-    
-    for (let i = 0; i < selectedArray.length; i++) {
-        for (let j = i + 1; j < selectedArray.length; j++) {
-            drawLine(members[selectedArray[i]], members[selectedArray[j]]);
-        }
-    }
-}
-
-function drawLine(member1, member2) {
-    const x1 = member1.x + 75; // Центр первого прямоугольника
-    const y1 = member1.y + 50; // Центр первого прямоугольника
-    const x2 = member2.x + 75; // Центр второго прямоугольника
-    const y2 = member2.y + 50; // Центр второго прямоугольника
-
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = '#000';
-    ctx.stroke();
-}
-
-document.addEventListener('dragstart', function(event) {
-    event.preventDefault();
 });
+
+// Draw connection line between selected members
+function drawConnections() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (selectedMembers.length === 2) {
+        const rect1 = selectedMembers[0].getBoundingClientRect();
+        const rect2 = selectedMembers[1].getBoundingClientRect();
+
+        const x1 = rect1.left + rect1.width / 2;
+        const y1 = rect1.top + rect1.height / 2;
+        const x2 = rect2.left + rect2.width / 2;
+        const y2 = rect2.top + rect2.height / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+}
+
+// Select members for connection
+treeContainer.addEventListener('click', (e) => {
+    if (isConnecting && e.target.classList.contains('member')) {
+        if (!selectedMembers.includes(e.target)) {
+            selectedMembers.push(e.target);
+        }
+
+        if (selectedMembers.length === 2) {
+            drawConnections();
+            selectedMembers = [];
+        }
+    }
+});
+
+// Resize canvas to fit window
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
