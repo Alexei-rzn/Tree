@@ -12,6 +12,23 @@
     <button id="lineButton" class="line-button">Линия</button>
     <canvas id="lineCanvas" class="line-canvas"></canvas>
 
+    <!-- Модальное окно для ввода данных -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Добавить члена семьи</h2>
+            <label for="name">ФИО:</label>
+            <input type="text" id="name" required><br>
+            <label for="year">Год рождения:</label>
+            <input type="number" id="year"><br>
+            <label for="location">Место жительства:</label>
+            <input type="text" id="location"><br>
+            <label for="status">Статус:</label>
+            <input type="text" id="status"><br>
+            <button id="submit">Добавить</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
