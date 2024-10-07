@@ -11,15 +11,34 @@ document.getElementById('addMember').addEventListener('click', addMember);
 document.getElementById('lineButton').addEventListener('click', toggleLineDrawing);
 
 function addMember() {
-    const name = prompt("Введите имя члена семьи (можно использовать Enter для новой строки):").trim();
-    const member = {
-        id: members.length,
-        name: name || "Новый член семьи",
-        x: Math.random() * (lineCanvas.width - 150),
-        y: Math.random() * (lineCanvas.height - 100),
-    };
-    members.push(member);
-    drawMember(member);
+    const form = document.createElement('div');
+    form.innerHTML = `
+        <label>ФИО:</label><input type="text" id="name" required><br>
+        <label>Год рождения:</label><input type="number" id="year"><br>
+        <label>Место жительства:</label><input type="text" id="location"><br>
+        <label>Статус:</label><input type="text" id="status"><br>
+        <button id="submit">Добавить</button>
+    `;
+    document.body.appendChild(form);
+
+    // Обработка добавления члена семьи
+    document.getElementById('submit').addEventListener('click', function() {
+        const name = document.getElementById('name').value;
+        const year = document.getElementById('year').value;
+        const location = document.getElementById('location').value;
+        const status = document.getElementById('status').value;
+
+        const member = {
+            id: members.length,
+            name: `${name}\nГод: ${year}\nЖитель: ${location}\nСтатус: ${status}`,
+            x: Math.random() * (lineCanvas.width - 150),
+            y: Math.random() * (lineCanvas.height - 100),
+        };
+
+        members.push(member);
+        drawMember(member);
+        document.body.removeChild(form);
+    });
 }
 
 function drawMember(member) {
@@ -69,6 +88,24 @@ function dragAndDrop(element, member) {
     element.onmouseup = function() {
         document.removeEventListener('mousemove', onMouseMove);
         element.onmouseup = null;
+    };
+
+    // Обработка сенсорных событий
+    element.ontouchstart = function(event) {
+        event.preventDefault();
+        moveAt(event.touches[0].pageX, event.touches[0].pageY);
+        onMouseMove(event.touches[0]);
+    };
+
+    document.ontouchmove = function(event) {
+        if (event.touches.length) {
+            moveAt(event.touches[0].pageX, event.touches[0].pageY);
+        }
+    };
+
+    document.ontouchend = function() {
+        document.ontouchmove = null;
+        document.ontouchend = null;
     };
 }
 
