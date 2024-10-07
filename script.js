@@ -1,14 +1,17 @@
 let members = [];
 const lineCanvas = document.getElementById('lineCanvas');
 const ctx = lineCanvas.getContext('2d');
+const selectedMembers = new Set();
+let isDrawingLine = false;
 
 lineCanvas.width = document.getElementById('canvas').offsetWidth;
 lineCanvas.height = document.getElementById('canvas').offsetHeight;
 
 document.getElementById('addMember').addEventListener('click', addMember);
+document.getElementById('lineButton').addEventListener('click', toggleLineDrawing);
 
 function addMember() {
-    const name = prompt("Введите имя члена семьи:");
+    const name = prompt("Введите имя члена семьи (можно использовать Enter для новой строки):").trim();
     const member = {
         id: members.length,
         name: name || "Новый член семьи",
@@ -28,8 +31,17 @@ function drawMember(member) {
     rectangle.style.left = member.x + 'px';
     rectangle.style.top = member.y + 'px';
 
-    rectangle.onmousedown = function(event) {
+    rectangle.onmousedown = rectangle.ontouchstart = function(event) {
+        event.preventDefault();
         dragAndDrop(rectangle, member);
+    };
+
+    rectangle.onclick = function() {
+        if (isDrawingLine) {
+            selectedMembers.has(member.id) ? selectedMembers.delete(member.id) : selectedMembers.add(member.id);
+            rectangle.style.borderColor = selectedMembers.has(member.id) ? 'red' : 'black';
+            drawLines();
+        }
     };
 
     document.getElementById('canvas').appendChild(rectangle);
@@ -43,7 +55,7 @@ function dragAndDrop(element, member) {
     function moveAt(pageX, pageY) {
         element.style.left = pageX - shiftX + 'px';
         element.style.top = pageY - shiftY + 'px';
-        
+
         member.x = pageX - shiftX;
         member.y = pageY - shiftY;
         drawLines();
@@ -54,18 +66,30 @@ function dragAndDrop(element, member) {
     }
 
     document.addEventListener('mousemove', onMouseMove);
-
     element.onmouseup = function() {
         document.removeEventListener('mousemove', onMouseMove);
         element.onmouseup = null;
     };
 }
 
+function toggleLineDrawing() {
+    isDrawingLine = !isDrawingLine;
+    const buttonText = isDrawingLine ? "Сохранить линию" : "Линия";
+    document.getElementById('lineButton').innerText = buttonText;
+
+    if (!isDrawingLine) {
+        selectedMembers.clear();
+        drawLines();
+    }
+}
+
 function drawLines() {
     ctx.clearRect(0, 0, lineCanvas.width, lineCanvas.height);
-    for (let i = 0; i < members.length; i++) {
-        for (let j = i + 1; j < members.length; j++) {
-            drawLine(members[i], members[j]);
+    const selectedArray = Array.from(selectedMembers);
+    
+    for (let i = 0; i < selectedArray.length; i++) {
+        for (let j = i + 1; j < selectedArray.length; j++) {
+            drawLine(members[selectedArray[i]], members[selectedArray[j]]);
         }
     }
 }
