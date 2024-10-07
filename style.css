@@ -41,5 +41,9 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    pointer-events: none;
+    pointer-events: none; /* Чтобы клики не перекрывали линии */
+}
+
+.hidden {
+    display: none;
 }
