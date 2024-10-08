@@ -11,6 +11,16 @@ let selectedMembers = [];
 let isConnecting = false;
 let ctx = canvas.getContext('2d');
 
+// Load saved members from localStorage
+window.onload = function () {
+    if (localStorage.getItem('members')) {
+        members = JSON.parse(localStorage.getItem('members'));
+        members.forEach(member => {
+            createMemberElement(member);
+        });
+    }
+};
+
 // Open modal to add member
 addMemberBtn.addEventListener('click', () => {
     addMemberModal.style.display = 'flex';
@@ -25,17 +35,32 @@ closeModal.addEventListener('click', () => {
 memberForm.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('name').value;
-    const year = document.getElementById('year').value;
-    const city = document.getElementById('city').value;
-    const status = document.getElementById('status').value;
+    const member = {
+        id: Date.now(),
+        name: document.getElementById('name').value,
+        year: document.getElementById('year').value,
+        city: document.getElementById('city').value,
+        status: document.getElementById('status').value,
+        left: 50,
+        top: 50
+    };
 
+    members.push(member);
+    saveMembersToLocalStorage();
+    createMemberElement(member);
+    addMemberModal.style.display = 'none';
+});
+
+// Create member HTML element
+function createMemberElement(member) {
     const memberDiv = document.createElement('div');
     memberDiv.classList.add('member');
-    memberDiv.innerHTML = `<p>${name}</p><p>${year}</p><p>${city}</p><p>${status}</p>`;
+    memberDiv.innerHTML = `<p>${member.name}</p><p>${member.year}</p><p>${member.city}</p><p>${member.status}</p>`;
 
-    memberDiv.style.left = '50px';
-    memberDiv.style.top = '50px';
+    memberDiv.style.left = member.left + 'px';
+    memberDiv.style.top = member.top + 'px';
+
+    memberDiv.dataset.id = member.id;
 
     // Enable drag and drop for members
     memberDiv.onmousedown = (event) => {
@@ -43,22 +68,19 @@ memberForm.addEventListener('submit', (e) => {
     };
 
     treeContainer.appendChild(memberDiv);
-    members.push(memberDiv);
-
-    addMemberModal.style.display = 'none';
-});
+}
 
 // Drag member function
-function dragMember(event, member) {
-    let shiftX = event.clientX - member.getBoundingClientRect().left;
-    let shiftY = event.clientY - member.getBoundingClientRect().top;
-
-    moveAt(event.pageX, event.pageY);
+function dragMember(event, memberDiv) {
+    let shiftX = event.clientX - memberDiv.getBoundingClientRect().left;
+    let shiftY = event.clientY - memberDiv.getBoundingClientRect().top;
 
     function moveAt(pageX, pageY) {
-        member.style.left = pageX - shiftX + 'px';
-        member.style.top = pageY - shiftY + 'px';
+        memberDiv.style.left = pageX - shiftX + 'px';
+        memberDiv.style.top = pageY - shiftY + 'px';
     }
+
+    moveAt(event.pageX, event.pageY);
 
     function onMouseMove(event) {
         moveAt(event.pageX, event.pageY);
@@ -66,10 +88,21 @@ function dragMember(event, member) {
 
     document.addEventListener('mousemove', onMouseMove);
 
-    member.onmouseup = () => {
+    memberDiv.onmouseup = () => {
         document.removeEventListener('mousemove', onMouseMove);
-        member.onmouseup = null;
+        memberDiv.onmouseup = null;
+
+        // Save new position
+        const member = members.find(m => m.id == memberDiv.dataset.id);
+        member.left = parseInt(memberDiv.style.left);
+        member.top = parseInt(memberDiv.style.top);
+        saveMembersToLocalStorage();
     };
+}
+
+// Save members to localStorage
+function saveMembersToLocalStorage() {
+    localStorage.setItem('members', JSON.stringify(members));
 }
 
 // Handle connection mode
