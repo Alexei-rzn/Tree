@@ -13,6 +13,23 @@
         <svg id="tree"></svg>
         <button id="addPersonButton">Добавить Члена Семьи</button>
     </div>
+    
+    <div id="formPopup" class="form-popup">
+        <div class="form-content">
+            <span id="closeForm" class="close">&times;</span>
+            <h2>Добавить Члена Семьи</h2>
+            <label for="fullName">ФИО:</label>
+            <input type="text" id="fullName" required>
+            <label for="birthDate">Дата рождения:</label>
+            <input type="date" id="birthDate" required>
+            <label for="birthPlace">Место жительства:</label>
+            <input type="text" id="birthPlace" required>
+            <label for="status">Статус:</label>
+            <input type="text" id="status" required>
+            <button id="submitPerson">Добавить</button>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>
