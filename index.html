@@ -3,35 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Семейное Древо</title>
+    <title>Генеалогическое Древо</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
 <body>
-    <div id="tree-container">
-        <button id="add-member-btn" class="action-btn">+</button>
+    <div class="container">
+        <h1>Генеалогическое Древо</h1>
+        <svg id="tree"></svg>
+        <button id="addPersonButton">Добавить Члена Семьи</button>
     </div>
-
-    <div id="add-member-modal" class="modal">
-        <div class="modal-content">
-            <span id="close-modal">&times;</span>
-            <form id="member-form">
-                <label for="name">ФИО:</label>
-                <input type="text" id="name" required>
-                <label for="year">Год:</label>
-                <input type="number" id="year" required>
-                <label for="city">Город:</label>
-                <input type="text" id="city" required>
-                <label for="status">Статус:</label>
-                <input type="text" id="status" required>
-                <button type="submit" id="add-member">Добавить</button>
-            </form>
-        </div>
-    </div>
-
-    <button id="connect-members-btn" class="action-btn">Связь</button>
-
-    <canvas id="connections"></canvas>
-
     <script src="script.js"></script>
 </body>
 </html>
