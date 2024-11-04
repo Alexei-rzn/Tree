@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    background: #007BFF;
+    color: white;
+    padding: 10px 0;
+}
+
+h1 {
+    margin: 0;
+}
+
+main {
+    margin: 20px 0;
+}
+
+.diagram {
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    padding: 15px;
+}
+
+.diagram h2 {
+    margin: 0;
+}
+
+.diagram img {
+    max-width: 100%;
+    height: auto;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    color: #888;
+}
