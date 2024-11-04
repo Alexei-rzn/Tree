@@ -1,44 +1,33 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
+    margin: 20px;
+    line-height: 1.6;
+    background-color: #f9f9f9; /* Фоновый цвет */
 }
 
-header {
-    text-align: center;
-    background: #007BFF;
-    color: white;
-    padding: 10px 0;
+h1, h2 {
+    color: #333; /* Цвет заголовков */
 }
 
-h1 {
-    margin: 0;
-}
-
-main {
-    margin: 20px 0;
-}
-
-.diagram {
-    background: white;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 10px 0;
+section {
+    border: 1px solid #ddd; /* Рамка секций */
     padding: 15px;
+    margin: 10px 0;
+    background-color: #fff; /* Цвет фона секций */
+    border-radius: 8px; /* Скругленные углы */
 }
 
-.diagram h2 {
-    margin: 0;
-}
-
-.diagram img {
-    max-width: 100%;
-    height: auto;
+pre {
+    background-color: #e8e8e8; /* Цвет фона для схем и диаграмм */
+    padding: 10px;
+    border: 1px dashed #bbb; /* Дашированная рамка */
+    white-space: pre-wrap; /* Обработка длинных строк */
 }
 
 footer {
     text-align: center;
     margin-top: 20px;
-    color: #888;
+    padding: 10px 0;
+    background-color: #222; /* Цвет фона в подвале */
+    color: white; /* Цвет текста */
 }
