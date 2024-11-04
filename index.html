@@ -3,33 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генеалогическое Древо</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <title>Схемы</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Генеалогическое Древо</h1>
-        <svg id="tree"></svg>
-        <button id="addPersonButton">Добавить Члена Семьи</button>
-    </div>
-    
-    <div id="formPopup" class="form-popup">
-        <div class="form-content">
-            <span id="closeForm" class="close">&times;</span>
-            <h2>Добавить Члена Семьи</h2>
-            <label for="fullName">ФИО:</label>
-            <input type="text" id="fullName" required>
-            <label for="birthDate">Дата рождения:</label>
-            <input type="date" id="birthDate" required>
-            <label for="birthPlace">Место жительства:</label>
-            <input type="text" id="birthPlace" required>
-            <label for="status">Статус:</label>
-            <input type="text" id="status" required>
-            <button id="submitPerson">Добавить</button>
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
+    <header>
+        <h1>Схемы</h1>
+    </header>
+    <main>
+        <section id="diagrams">
+            <div class="diagram">
+                <h2>Схема 1</h2>
+                <img src="images/diagram1.png" alt="Схема 1">
+            </div>
+            <div class="diagram">
+                <h2>Схема 2</h2>
+                <img src="images/diagram2.png" alt="Схема 2">
+            </div>
+            <div class="diagram">
+                <h2>Схема 3</h2>
+                <img src="images/diagram3.png" alt="Схема 3">
+            </div>
+            <!-- Добавьте дополнительные схемы по такому же принципу -->
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Ваше Имя</p>
+    </footer>
 </body>
 </html>
