@@ -4,31 +4,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Схемы</title>
+    <title>История Западной Европы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+        }
+
+        h1, h2 {
+            color: darkblue;
+            margin-top: 20px;
+        }
+
+        section {
+            background: white;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Схемы</h1>
-    </header>
-    <main>
-        <section id="diagrams">
-            <div class="diagram">
-                <h2>Схема 1</h2>
-                <img src="images/diagram1.png" alt="Схема 1">
-            </div>
-            <div class="diagram">
-                <h2>Схема 2</h2>
-                <img src="images/diagram2.png" alt="Схема 2">
-            </div>
-            <div class="diagram">
-                <h2>Схема 3</h2>
-                <img src="images/diagram3.png" alt="Схема 3">
-            </div>
-            <!-- Добавьте дополнительные схемы по такому же принципу -->
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2023 Ваше Имя</p>
-    </footer>
+    <h1>Краткий конспект по истории Западной Европы</h1>
+
+    <section id="feodalnaja-razdrobnost">
+        <h2>4. Феодальная раздробленность Западной Европы в ІХ-ХІ веках</h2>
+        <p>Феодальная раздробленность — это процесс, в результате которого на территории Западной Европы образовалось множество самостоятельных феодальных государств. Этот процесс был вызван упадком центральной власти, экономической разрозненностью и ростом местного самоуправления.</p>
+        <canvas id="feudalChart" width="400" height="200"></canvas>
+    </section>
+
+    <section id="angliya">
+        <h2>5. Англия в раннее Средневековье</h2>
+        <p>Раннее Средневековье в Англии характеризовалось смешением различных культур, таких как англосаксы, норманны и кельты. Ключевые события этого периода включают завоевание Англии норманнами в 1066 году.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Год</th>
+                    <th>Событие</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>410</td>
+                    <td>Уход римлян из Британии</td>
+                </tr>
+                <tr>
+                    <td>1066</td>
+                    <td>Завоевание Англии норманнами</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="vizantija">
+        <h2>6. Византия при Юстиниане: Борьба империи с внешними врагами</h2>
+        <p>Юстиниан I — один из самых знаменитых византийских императоров, известный своими реформами и военными кампаниями. Его правление характеризуется амбициозным строительством и восстановлением территорий империи.</p>
+        <canvas id="justinChart" width="400" height="200"></canvas>
+    </section>
+
+    <section id="kultura-vizantii">
+        <h2>7. Культура Византии</h2>
+        <p>Византийская культура была глубокора религиозна, и её художественные достижения включали иконопись, мозаики и архитектуру. Византия оказывала огромное влияние на соседние народы и культуры.</p>
+        <canvas id="cultureChart" width="400" height="200"></canvas>
+    </section>
+
+    <section id="slavyanskie-gosudarstva">
+        <h2>8. Образование славянских государств</h2>
+        <p>Процесс создания первых славянских государств, таких как Киевская Русь. Это было связано с ростом торговых путей и взаимодействием с соседними народами.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Год</th>
+                    <th>Событие</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>862</td>
+                    <td>Призвание скандинавов на княжение в Новгород</td>
+                </tr>
+                <tr>
+                    <td>882</td>
+                    <td>Объединение Киева и Новгорода под властью Олега</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="islam">
+        <h2>9. Возникновение ислама: Арабский халифат и его распад</h2>
+        <p>Ислам возник в VII веке и быстро распространился по Аравийскому полуострову. Арабский халифат достиг значительных размеров, но вскоре распался на множество независимых государств.</p>
+        <canvas id="islamChart" width="400" height="200"></canvas>
+    </section>
+
+    <script>
+        // Схема феодальной раздробленности
+        const feudalCanvas = document.getElementById('feudalChart');
+        const feudalCtx = feudalCanvas.getContext('2d');
+        feudalCtx.fillStyle = "#FF0000";
+        feudalCtx.fillRect(50, 50, 150, 100);
+        feudalCtx.fillStyle = "#000000";
+        feudalCtx.fillText('Феодальная раздробленность', 55, 70);
+
+        // Схема для Юстиниана
+        const justinCanvas = document.getElementById('justinChart');
+        const justinCtx = justinCanvas.getContext('2d');
+        justinCtx.fillStyle = "#0000FF";
+        justinCtx.fillRect(50, 50, 150, 100);
+        justinCtx.fillStyle = "#000000";
+        justinCtx.fillText('Юстиниан: реформы', 55, 70);
+
+        // Культура Византии
+        const cultureCanvas = document.getElementById('cultureChart');
+        const cultureCtx = cultureCanvas.getContext('2d');
+        cultureCtx.fillStyle = "#00FF00";
+        cultureCtx.fillRect(50, 50, 150, 100);
+        cultureCtx.fillStyle = "#000000";
+        cultureCtx.fillText('Культура Византии', 55, 70);
+
+        // Халифат
+        const islamCanvas = document.getElementById('islamChart');
+        const islamCtx = islamCanvas.getContext('2d');
+        islamCtx.fillStyle = "#FFFF00";
+        islamCtx.fillRect(50, 50, 150, 100);
+        islamCtx.fillStyle = "#000000";
+        islamCtx.fillText('Арабский халифат', 55, 70);
+    </script>
 </body>
 </html>
