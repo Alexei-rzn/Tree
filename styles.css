@@ -1,33 +1,43 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
     line-height: 1.6;
-    background-color: #f9f9f9; /* Фоновый цвет */
+    margin: 0;
+    background-color: #f4f4f4;
 }
 
-h1, h2 {
-    color: #333; /* Цвет заголовков */
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
 }
 
-section {
-    border: 1px solid #ddd; /* Рамка секций */
-    padding: 15px;
-    margin: 10px 0;
-    background-color: #fff; /* Цвет фона секций */
-    border-radius: 8px; /* Скругленные углы */
-}
-
-pre {
-    background-color: #e8e8e8; /* Цвет фона для схем и диаграмм */
-    padding: 10px;
-    border: 1px dashed #bbb; /* Дашированная рамка */
-    white-space: pre-wrap; /* Обработка длинных строк */
-}
-
-footer {
+h1 {
     text-align: center;
-    margin-top: 20px;
-    padding: 10px 0;
-    background-color: #222; /* Цвет фона в подвале */
-    color: white; /* Цвет текста */
+    margin: 20px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
 }
