@@ -26,18 +26,18 @@ table {
 th, td {
     padding: 12px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid #ddd; /* Добавление границы для ячеек */
 }
 
 th {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #4CAF50; /* Цвет заголовка */
+    color: white; /* Цвет текста заголовка */
 }
 
 tr:nth-child(even) {
-    background-color: #f2f2f2;
+    background-color: #f9f9f9; /* Цвет для четных строк */
 }
 
 tr:hover {
-    background-color: #ddd;
+    background-color: #e2f7e2; /* Цвет при наведении на строку */
 }
