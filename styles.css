@@ -41,3 +41,7 @@ tr:nth-child(even) {
 tr:hover {
     background-color: #e2f7e2; /* Цвет при наведении на строку */
 }
+
+.highlight-row {
+    background-color: #ffeb3b; /* желтый фон для выделенных строк */
+}
