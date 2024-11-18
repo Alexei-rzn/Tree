@@ -3,98 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сканирование штрих-кода</title>
+    <title>Сканирование поддона</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh; /* Высота на весь экран */
-            margin: 0; /* Убираем отступы */
-            background-color: #f7f7f7; /* Фон страницы */
+            text-align: center;
+            margin-top: 50px;
         }
-
-        h1 {
-            margin-bottom: 20px;
+        #pallet-container {
+            margin-top: 20px;
         }
-
-        #input-container {
-            margin-bottom: 20px;
+        #pallet-info {
+            font-size: 24px;
+            color: #333;
         }
-
         input[type="text"] {
-            width: 200px;
+            width: 250px;
             padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+            margin: 20px 0;
+            font-size: 18px;
         }
-
         button {
             padding: 10px 20px;
-            margin-top: 10px;
-            background-color: #5cb85c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #4cae4c;
-        }
-
-        #result {
-            margin-top: 20px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            margin: 5px;
         }
     </style>
 </head>
 <body>
 
-<h1>Сканируйте штрих-код</h1>
+<h1>Сканируйте штрих-код поддона</h1>
 
-<div id="input-container">
-    <input type="text" id="barcode-input" placeholder="Введите штрих-код вручную" />
-    <button id="submit-button">Отправить</button>
+<input type="text" id="barcode-input" placeholder="Введите штрих-код вручную" autofocus>
+<button id="manual-input-button">Ввести штрих-код</button>
+
+<div id="pallet-container">
+    <p id="pallet-info"></p>
 </div>
 
-<div id="result"></div>
-
 <script>
-    // Предположим, что у вас уже загружены данные поддонов
-    const palletsData = {
-        '1234567890123': 'Паллет №1',
-        '9876543210123': 'Паллет №2',
-        // Добавьте сюда другие поддоны
+    const pallets = {
+        '123456': 'Поддон 1: Содержимое A',
+        '789012': 'Поддон 2: Содержимое B',
+        // Добавьте дополнительные коды поддонов здесь
     };
 
-    document.getElementById('submit-button').addEventListener('click', function () {
-        const barcode = document.getElementById('barcode-input').value.trim();
-        displayPalletInfo(barcode);
-    });
-
-    // Функция для отображения информации о поддоне
-    function displayPalletInfo(barcode) {
-        if (palletsData[barcode]) {
-            document.getElementById('result').textContent = 'Номер поддона: ' + palletsData[barcode];
+    const palletInfoElement = document.getElementById('pallet-info');
+    const barcodeInput = document.getElementById('barcode-input');
+    
+    // Функция для обновления информации о паллете
+    function updatePalletInfo(barcode) {
+        if (pallets[barcode]) {
+            palletInfoElement.textContent = pallets[barcode];
         } else {
-            document.getElementById('result').textContent = 'Поддон не найден';
+            palletInfoElement.textContent = 'Информация о паллете не найдена';
         }
     }
 
-    // Опционально: если сканер автоматически вводит данные в поле
-    document.getElementById('barcode-input').addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') { // Если нажата клавиша Enter
-            const barcode = event.target.value.trim();
-            displayPalletInfo(barcode);
+    // Обработчик события для ввода вручную
+    document.getElementById('manual-input-button').addEventListener('click', function() {
+        const barcode = barcodeInput.value.trim();
+        if (barcode) {
+            updatePalletInfo(barcode);
+            barcodeInput.value = ''; // Очистить поле ввода
+            barcodeInput.focus(); // Снова установить фокус
+        }
+    });
+
+    // Обработчик события для автоматического захвата штрих-кода
+    barcodeInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const barcode = barcodeInput.value.trim();
+            if (barcode) {
+                updatePalletInfo(barcode);
+                barcodeInput.value = ''; // Очистить поле ввода
+                barcodeInput.focus(); // Снова установить фокус
+            }
         }
     });
 </script>
 
 </body>
 </html>
+
