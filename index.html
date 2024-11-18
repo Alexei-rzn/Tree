@@ -3,53 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бежин луг - Описание пунктов</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Сканирование штрих-кода</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Высота на весь экран */
+            margin: 0; /* Убираем отступы */
+            background-color: #f7f7f7; /* Фон страницы */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #input-container {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 200px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Описание каждого пункта в произведении И.С. Тургенева "Бежин луг"</h1>
-    </header>
-    <main>
-        <section>
-            <h2>1. ОХОТНИК</h2>
-            <p>Центральная фигура рассказа, охотник – это не только персонаж, но и символ человека, который ищет свое место в жизни. Через его восприятие мира и отношения с ним мы знакомимся с философскими размышлениями о природе...</p>
-        </section>
-        <section>
-            <h2>2. Начало охоты</h2>
-            <p>Этот пункт включает в себя путь охотника к Бежиным лугам, настрой его на охоту и предвкушение новых встреч и впечатлений...</p>
-        </section>
-        <section>
-            <h2>3. Встречи с крестьянскими жителями</h2>
-            <p>Охотник встречает местных жителей, которые помогают ему понять жизнь деревни, её традиции и обычаи. Эти встречи подчеркивают дружелюбие и простоту крестьян...</p>
-        </section>
-        <section>
-            <h2>4. Поход через Бежин луг</h2>
-            <p>Восхитительное описание природы Бежиных лугов — зелёные просторы, живописные пейзажи, разнообразие флоры и фауны...</p>
-        </section>
-        <section>
-            <h2>5. Встреча с мальчиком-охотником</h2>
-            <p>Охотник встречает мальчика, который только начинает свой путь в мире охоты. Эта встреча полна тепла и жизнеутверждающего духа...</p>
-        </section>
-        <section>
-            <h2>6. Конфликт между охотой и моралью</h2>
-            <p>Охотник начинает осознавать, что охота — это не просто про захват добычи, это также связано с моральными и этическими вопросами...</p>
-        </section>
-        <section>
-            <h2>7. Размышления о жизни и смысле бытия</h2>
-            <p>Погружение охотника в глубокие философские размышления о жизни, о месте человека среди природы...</p>
-        </section>
-        <section>
-            <h2>8. Эмоциональное завершение</h2>
-            <p>На фоне завершения охоты охотник осознает все произошедшие изменения в своем мировосприятии...</p>
-        </section>
-        <section>
-            <h2>9. Итоговые мысли о природе</h2>
-            <p>Охотник приходит к выводу о важности защиты природы и необходимости осознания ее ценности...</p>
-        </section>
-    </main>
-    <footer>
-        <p>© 2023 MindUp Team. Все права защищены.</p>
-    </footer>
+
+<h1>Сканируйте штрих-код</h1>
+
+<div id="input-container">
+    <input type="text" id="barcode-input" placeholder="Введите штрих-код вручную" />
+    <button id="submit-button">Отправить</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+    // Предположим, что у вас уже загружены данные поддонов
+    const palletsData = {
+        '1234567890123': 'Паллет №1',
+        '9876543210123': 'Паллет №2',
+        // Добавьте сюда другие поддоны
+    };
+
+    document.getElementById('submit-button').addEventListener('click', function () {
+        const barcode = document.getElementById('barcode-input').value.trim();
+        displayPalletInfo(barcode);
+    });
+
+    // Функция для отображения информации о поддоне
+    function displayPalletInfo(barcode) {
+        if (palletsData[barcode]) {
+            document.getElementById('result').textContent = 'Номер поддона: ' + palletsData[barcode];
+        } else {
+            document.getElementById('result').textContent = 'Поддон не найден';
+        }
+    }
+
+    // Опционально: если сканер автоматически вводит данные в поле
+    document.getElementById('barcode-input').addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') { // Если нажата клавиша Enter
+            const barcode = event.target.value.trim();
+            displayPalletInfo(barcode);
+        }
+    });
+</script>
+
 </body>
 </html>
