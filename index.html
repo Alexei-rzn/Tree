@@ -9,11 +9,15 @@
             font-family: Arial, sans-serif;
             text-align: center; /* Центрируем текст */
             margin: 0; /* Убираем отступы */
-            padding: 20px; /* Добавляем отступы */
+            padding: 20px; /* Добавляем отступы для удобства */
             background-color: #f7f7f7; /* Фон страницы */
         }
 
         h1 {
+            margin-bottom: 20px;
+        }
+
+        #input-container {
             margin-bottom: 20px;
         }
 
@@ -48,7 +52,7 @@
 
 <div id="input-container">
     <input type="text" id="barcode-input" placeholder="Введите штрих-код вручную" />
-    <button id="submit-button">Проверить</button> <!-- Добавлено для неподдерживаемых браузеров -->
+    <button id="submit-btn">Проверить</button> <!-- Кнопка для проверки введенного штрих-кода -->
 </div>
 
 <div id="result"></div>
@@ -58,27 +62,27 @@
     var palletsData = {
         '1234567890123': 'Паллет 1: Содержимое A',
         '7894561230123': 'Паллет 2: Содержимое B',
-        '4680211132859': 'На работе: шутка о работе.', // Упростил текст шутки
-        // Добавьте сюда другие поддоны
+        '4680211132859': 'Паллет 3: Содержимое C',  // Упрощена шутка для теста
+        // Здесь могут быть другие поддоны
     };
 
     var inputField = document.getElementById('barcode-input');
     var resultContainer = document.getElementById('result');
 
     // Обработка нажатия кнопки
-    document.getElementById('submit-button').addEventListener('click', function () {
+    document.getElementById('submit-btn').onclick = function () {
         var barcode = inputField.value.trim();
 
-        // Проверка длины
+        // Проверка длины штрих-кода
         if (barcode.length === 13) {
             displayPalletInfo(barcode);
             inputField.value = ''; // Очищаем поле ввода для следующего сканирования
         } else {
-            alert('Пожалуйста, введите действительный штрих-код длиной 13 символов.');
+            alert('Пожалуйста, введите действительный штрих-код длиной 13 символов.'); // Сообщение об ошибке
         }
-    });
+    };
 
-    // Функция для отображения информации о поддоне
+    // Функция для отображения информации о паллете
     function displayPalletInfo(barcode) {
         if (palletsData[barcode]) {
             resultContainer.textContent = barcode + ' - ' + palletsData[barcode];
@@ -87,6 +91,11 @@
         }
         inputField.focus(); // Снова фокусируемся на поле ввода
     }
+
+    // Устанавливаем фокус на поле ввода при загрузке
+    window.onload = function() {
+        inputField.focus();
+    };
 </script>
 
 </body>
