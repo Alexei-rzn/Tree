@@ -3,86 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сканирование поддона</title>
+    <title>Сканирование штрих-кода</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
+            text-align: center; /* Центрируем текст */
+            margin: 0; /* Убираем отступы */
+            padding: 20px; /* Добавляем отступы */
+            background-color: #f7f7f7; /* Фон страницы */
         }
-        #pallet-container {
-            margin-top: 20px;
+
+        h1 {
+            margin-bottom: 20px;
         }
-        #pallet-info {
-            font-size: 24px;
-            color: #333;
-        }
+
         input[type="text"] {
-            width: 250px;
+            width: 200px;
             padding: 10px;
-            margin: 20px 0;
-            font-size: 18px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
+
         button {
             padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
+            margin-top: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<h1>Сканируйте штрих-код поддона</h1>
+<h1>Сканируйте штрих-код</h1>
 
-<input type="text" id="barcode-input" placeholder="Введите штрих-код вручную" autofocus>
-<button id="manual-input-button">Ввести штрих-код</button>
-
-<div id="pallet-container">
-    <p id="pallet-info"></p>
+<div id="input-container">
+    <input type="text" id="barcode-input" placeholder="Введите штрих-код вручную" />
+    <button id="submit-button">Проверить</button> <!-- Добавлено для неподдерживаемых браузеров -->
 </div>
 
+<div id="result"></div>
+
 <script>
-    const pallets = {
-        '123456': 'Поддон 1: Содержимое A',
-        '789012': 'Поддон 2: Содержимое B',
-        // Добавьте дополнительные коды поддонов здесь
+    // Инициализация данных для паллетов
+    var palletsData = {
+        '1234567890123': 'Паллет 1: Содержимое A',
+        '7894561230123': 'Паллет 2: Содержимое B',
+        '4680211132859': 'На работе: шутка о работе.', // Упростил текст шутки
+        // Добавьте сюда другие поддоны
     };
 
-    const palletInfoElement = document.getElementById('pallet-info');
-    const barcodeInput = document.getElementById('barcode-input');
-    
-    // Функция для обновления информации о паллете
-    function updatePalletInfo(barcode) {
-        if (pallets[barcode]) {
-            palletInfoElement.textContent = pallets[barcode];
+    var inputField = document.getElementById('barcode-input');
+    var resultContainer = document.getElementById('result');
+
+    // Обработка нажатия кнопки
+    document.getElementById('submit-button').addEventListener('click', function () {
+        var barcode = inputField.value.trim();
+
+        // Проверка длины
+        if (barcode.length === 13) {
+            displayPalletInfo(barcode);
+            inputField.value = ''; // Очищаем поле ввода для следующего сканирования
         } else {
-            palletInfoElement.textContent = 'Информация о паллете не найдена';
+            alert('Пожалуйста, введите действительный штрих-код длиной 13 символов.');
         }
+    });
+
+    // Функция для отображения информации о поддоне
+    function displayPalletInfo(barcode) {
+        if (palletsData[barcode]) {
+            resultContainer.textContent = barcode + ' - ' + palletsData[barcode];
+        } else {
+            resultContainer.textContent = 'Информация о паллете не найдена.';
+        }
+        inputField.focus(); // Снова фокусируемся на поле ввода
     }
-
-    // Обработчик события для ввода вручную
-    document.getElementById('manual-input-button').addEventListener('click', function() {
-        const barcode = barcodeInput.value.trim();
-        if (barcode) {
-            updatePalletInfo(barcode);
-            barcodeInput.value = ''; // Очистить поле ввода
-            barcodeInput.focus(); // Снова установить фокус
-        }
-    });
-
-    // Обработчик события для автоматического захвата штрих-кода
-    barcodeInput.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            const barcode = barcodeInput.value.trim();
-            if (barcode) {
-                updatePalletInfo(barcode);
-                barcodeInput.value = ''; // Очистить поле ввода
-                barcodeInput.focus(); // Снова установить фокус
-            }
-        }
-    });
 </script>
 
 </body>
 </html>
-
