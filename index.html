@@ -7,10 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center; /* Центрируем текст */
-            margin: 0; /* Убираем отступы */
-            padding: 20px; /* Добавляем отступы для удобства */
-            background-color: #f7f7f7; /* Фон страницы */
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
         }
 
         h1 {
@@ -52,60 +52,51 @@
 
 <div id="input-container">
     <input type="text" id="barcode-input" placeholder="Сканируйте или введите штрих-код" />
-    <button id="submit-btn">Проверить</button> <!-- Кнопка для проверки введенного штрих-кода -->
+    <button id="submit-btn">Проверить</button>
 </div>
 
 <div id="result"></div>
 
 <script>
-    // Инициализация данных для паллетов
     var palletsData = {
         '1234567890123': 'Паллет 1: Содержимое A',
         '7894561230123': 'Паллет 2: Содержимое B',
         '4680211132859': 'Паллет 3: Содержимое C',
-        // Здесь могут быть другие поддоны
     };
 
     var inputField = document.getElementById('barcode-input');
     var resultContainer = document.getElementById('result');
 
-    // Функция для обработки ввода
     function processInput(barcode) {
-        // Проверка длины штрих-кода
         if (barcode.length === 13) {
             displayPalletInfo(barcode);
-            inputField.value = ''; // Очищаем поле ввода для следующего сканирования
+            inputField.value = '';
         } else {
-            alert('Пожалуйста, введите действительный штрих-код длиной 13 символов.'); // Сообщение об ошибке
+            alert('Пожалуйста, введите действительный штрих-код длиной 13 символов.');
         }
     }
 
-    // Обработка нажатия кнопки
     document.getElementById('submit-btn').onclick = function () {
         var barcode = inputField.value.trim();
         processInput(barcode);
     };
 
-    // Обработка события ввода с клавиатуры
-    inputField.addEventListener('keydown', function (event) {
-        // Проверяем на нажатие Enter
-        if (event.key === 'Enter') {
+    inputField.attachEvent('onkeydown', function (event) {
+        if (event.keyCode === 13) { // Enter key
             var barcode = inputField.value.trim();
             processInput(barcode);
         }
     });
 
-    // Функция для отображения информации о паллете
     function displayPalletInfo(barcode) {
         if (palletsData[barcode]) {
-            resultContainer.textContent = barcode + ' - ' + palletsData[barcode];
+            resultContainer.innerHTML = barcode + ' - ' + palletsData[barcode];
         } else {
-            resultContainer.textContent = 'Информация о паллете не найдена.';
+            resultContainer.innerHTML = 'Информация о паллете не найдена.';
         }
-        inputField.focus(); // Снова фокусируемся на поле ввода
+        inputField.focus();
     }
 
-    // Устанавливаем фокус на поле ввода при загрузке
     window.onload = function() {
         inputField.focus();
     };
