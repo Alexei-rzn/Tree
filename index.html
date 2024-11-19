@@ -51,7 +51,7 @@
 <h1>Сканируйте штрих-код</h1>
 
 <div id="input-container">
-    <input type="text" id="barcode-input" placeholder="Введите штрих-код вручную" />
+    <input type="text" id="barcode-input" placeholder="Сканируйте или введите штрих-код" />
     <button id="submit-btn">Проверить</button> <!-- Кнопка для проверки введенного штрих-кода -->
 </div>
 
@@ -62,17 +62,15 @@
     var palletsData = {
         '1234567890123': 'Паллет 1: Содержимое A',
         '7894561230123': 'Паллет 2: Содержимое B',
-        '4680211132859': 'Паллет 3: Содержимое C',  // Упрощена шутка для теста
+        '4680211132859': 'Паллет 3: Содержимое C',
         // Здесь могут быть другие поддоны
     };
 
     var inputField = document.getElementById('barcode-input');
     var resultContainer = document.getElementById('result');
 
-    // Обработка нажатия кнопки
-    document.getElementById('submit-btn').onclick = function () {
-        var barcode = inputField.value.trim();
-
+    // Функция для обработки ввода
+    function processInput(barcode) {
         // Проверка длины штрих-кода
         if (barcode.length === 13) {
             displayPalletInfo(barcode);
@@ -80,7 +78,22 @@
         } else {
             alert('Пожалуйста, введите действительный штрих-код длиной 13 символов.'); // Сообщение об ошибке
         }
+    }
+
+    // Обработка нажатия кнопки
+    document.getElementById('submit-btn').onclick = function () {
+        var barcode = inputField.value.trim();
+        processInput(barcode);
     };
+
+    // Обработка события ввода с клавиатуры
+    inputField.addEventListener('keydown', function (event) {
+        // Проверяем на нажатие Enter
+        if (event.key === 'Enter') {
+            var barcode = inputField.value.trim();
+            processInput(barcode);
+        }
+    });
 
     // Функция для отображения информации о паллете
     function displayPalletInfo(barcode) {
