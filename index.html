@@ -6,6 +6,7 @@
     <title>Автозаполнение по штрих-коду</title>
     <script src="https://unpkg.com/quagga/dist/quagga.min.js"></script>
     <style>
+        /* Стили остаются без изменений */
         * {
             box-sizing: border-box;
         }
@@ -196,9 +197,29 @@
         }
     }
 
+    function numberToWords(num) {
+        const ones = ['ноль', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+        const teens = ['десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+        const tens = ['двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+        const hundreds = ['сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
+
+        if (num < 10) return ones[num];
+        if (num < 20) return teens[num - 10];
+        if (num < 100) {
+            const tenPart = Math.floor(num / 10);
+            const onePart = num % 10;
+            return ones[tenPart] + (onePart ? ' ' + ones[onePart] : '');
+        }
+        return num.toString(); // Для чисел, превышающих 99
+    }
+
     function speakResult(text) {
-        const formattedText = text.replace(/[^a-zA-Z0-9а-яА-ЯёЁ\s]/g, ''); // Убираем знаки препинания
-        const speech = new SpeechSynthesisUtterance(formattedText);
+        const words = text.split(' ').map(word => {
+            const num = parseInt(word);
+            return !isNaN(num) && num >= 10 && num < 100 ? numberToWords(num) : word;
+        }).join(' ');
+
+        const speech = new SpeechSynthesisUtterance(words);
         speech.lang = 'ru-RU'; // Устанавливаем язык
         speech.rate = 1; // Скорость воспроизведения
         speech.volume = 1; // Громкость
@@ -229,7 +250,7 @@
                 tableHTML += `<tr>`;
                 outputColumns.forEach(column => {
                     tableHTML += `<td>${item[column]}</td>`;
-                    // Если выбранный столбец - адресс, озвучиваем
+                    // Если выбранный столбец - адрес, озвучиваем
                     if (column.toLowerCase() === 'адресс') {
                         speakResult(item[column]);
                     }
