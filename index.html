@@ -176,18 +176,15 @@
     }
 
     function numberToText(num) {
-        const units = [
-            '', 'один', 'два', 'три', 'четыре', 'пять', 
+        const units = ['', 'один', 'два', 'три', 'четыре', 'пять', 
             'шесть', 'семь', 'восемь', 'девять', 'десять', 
             'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 
             'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 
-            'девятнадцать', 
-        ];
-        const tens = [
-            '', '', 'двадцать', 'тридцать', 'сорок', 
+            'девятнадцать'];
+        
+        const tens = ['', '', 'двадцать', 'тридцать', 'сорок', 
             'пятьдесят', 'шестьдесят', 'семьдесят', 
-            'восемьдесят', 'девяносто'
-        ];
+            'восемьдесят', 'девяносто'];
 
         if (num < 20) {
             return units[num];
@@ -222,14 +219,15 @@
                 tableHTML += `<tr>`;
                 outputColumns.forEach(column => {
                     tableHTML += `<td>${item[column]}</td>`;
-                    // Если выбранный столбец - адрес, озвучиваем
+                    
+                    // Если выбранный столбец - это колонка чисел, озвучиваем
                     if (column.toLowerCase() === 'адрес') {
-                        // Проверяем, является ли значение числом
                         const value = item[column];
-                        if (!isNaN(value) && value.length === 2) {
-                            speakResult(numberToText(parseInt(value)));
+                        const numericValue = parseInt(value);
+                        if (!isNaN(numericValue) && numericValue >= 10 && numericValue < 100) {
+                            speakResult(numberToText(numericValue)); // произносит двузначное число
                         } else {
-                            speakResult(value);
+                            speakResult(value); // произносит текстовое представление
                         }
                     }
                 });
@@ -249,12 +247,13 @@
     }
 
     document.getElementById('manual-entry').addEventListener('input', function () {
-        populateAutocompleteList(); // Обновляем список при вводе
-
         // Задать минимальную длину штрих-кода, чтобы выполнять поиск
-        if (this.value.length >= 13) {
-            searchByBarcode(this.value.trim()); // Используем trim для удаления лишних пробелов
+        const inputValue = this.value.trim();
+        if (inputValue.length >= 13) {
+            searchByBarcode(inputValue);
         }
+
+        populateAutocompleteList(); // Обновляем список при вводе
     });
 
     document.getElementById('manual-entry').addEventListener('blur', function () {
