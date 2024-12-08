@@ -3,85 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Исследование атмосферного явления</title>
+    <title>Автозаполнение по штрих-коду</title>
+    <script src="https://unpkg.com/quagga/dist/quagga.min.js"></script>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; 
+            height: 100vh; 
+            margin: 0; 
+            background-color: #f0f4f7; 
+            padding-top: 20px; 
         }
-        h1, h2, h3 {
-            color: #007BFF;
+
+        h1 {
+            color: #333; 
+            margin-bottom: 20px; 
+            font-size: 24px; 
         }
-        p {
-            margin: 10px 0;
+
+        label {
+            font-weight: bold; 
+            margin-bottom: 5px; 
         }
-        ul {
-            margin: 10px 0;
-            padding-left: 20px;
+
+        #output-columns {
+            width: 100%;
+            max-width: 640px; 
+            padding: 5px; 
+            margin: 10px 0; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+        }
+
+        input[type="text"] {
+            width: 100%;
+            max-width: 640px; 
+            padding: 10px; 
+            margin-top: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            font-size: 16px; 
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4; 
+            background-color: #fff; 
+            max-height: 150px; 
+            overflow-y: auto; 
+            width: calc(100% - 2px); 
+            z-index: 1000; 
+            border-radius: 5px; 
+        }
+
+        .autocomplete-item {
+            padding: 10px; 
+            cursor: pointer; 
+            background-color: #fff; 
+            border-bottom: 1px solid #d4d4d4; 
+        }
+
+        .autocomplete-item:hover {
+            background-color: #e9e9e9; 
+        }
+
+        #loading {
+            display: none; 
+            margin-top: 20px; 
+        }
+
+        #result {
+            width: 100%;
+            max-width: 640px; 
+            text-align: center; 
+            margin-top: 20px; 
+        }
+
+        table {
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 20px; 
+        }
+
+        th, td {
+            border: 1px solid #ddd; 
+            padding: 8px; 
+            text-align: left; 
+        }
+
+        th {
+            background-color: #f2f2f2; 
+            font-weight: bold; 
         }
     </style>
 </head>
 <body>
 
-<h1>Исследование незнакомого атмосферного явления</h1>
+<h1>Автозаполнение по штрих-коду</h1>
 
-<h2>План информационного поиска</h2>
-<ol>
-    <li><strong>Определение атмосферного явления</strong>
-        <ul>
-            <li>Выбор незнакомого атмосферного явления для изучения (например, "облака-амфибии").</li>
-        </ul>
-    </li>
-    <li><strong>Поиск информации в интернете</strong>
-        <ul>
-            <li>Использование поисковых систем (Google, Yandex) для первичного сбора информации.</li>
-            <li>Посещение специализированных сайтов по метеорологии.</li>
-        </ul>
-    </li>
-    <li><strong>Изучение литературных источников</strong>
-        <ul>
-            <li>Поиск книг по метеорологии в библиотеке или интернет-магазинах.</li>
-            <li>Чтение статей и журналов по метеорологии.</li>
-        </ul>
-    </li>
-    <li><strong>Консультация с экспертами</strong>
-        <ul>
-            <li>Обращение к преподавателям университетов или научным сотрудникам.</li>
-            <li>Участие в форумах или дискуссионных группах.</li>
-        </ul>
-    </li>
-    <li><strong>Составление отчетности</strong>
-        <ul>
-            <li>Организация собранной информации и её анализ.</li>
-            <li>Подготовка выводов по исследуемому атмосферному явлению.</li>
-        </ul>
-    </li>
-</ol>
+<label for="output-columns">Выберите столбцы для вывода:</label>
+<select id="output-columns" multiple></select>
 
-<h2>Результаты исследования незнакомого атмосферного явления</h2>
+<input type="text" id="manual-entry" placeholder="Введите штрих-код для автозаполнения" autocomplete="off"/>
+<div id="autocomplete-list" class="autocomplete-items"></div>
 
-<h3>1. Определение атмосферного явления</h3>
-<p><strong>Облака-амфибии</strong> (или Amphibian Clouds) – это малоизвестное атмосферное явление, которое обсуждалось лишь в узких кругах метеорологов. Оно зарождается в условиях переходного состояния атмосферы, как правило, между холодным и теплым фронтами. Эти облака характеризуются необычной формой и могут напоминать как обычные облака, так и низкие слои тумана.</p>
+<div id="loading">Загрузка...</div>
 
-<h3>2. Поиск информации в интернете</h3>
-<p>Изучая облака-амфибии, я начал с поиска в Google и обнаружил несколько научных статей и исследовательских заметок. Например, на сайте <a href="https://www.nasa.gov" target="_blank">NASA</a> я нашел информацию о том, как облака-амфибии могут служить индикаторами изменений климата.</p>
-<p>Кроме того, на специализированных метеорологических сайтах, таких как <a href="https://weather.com" target="_blank">Weather.com</a> и <a href="https://www.spc.noaa.gov" target="_blank">Storm Prediction Center</a>, была представлена информация о формировании облаков и их влиянии на погоду, где упоминались и менее известные виды облаков.</p>
+<div id="result">
+    <p>Результат:</p>
+    <div id="search-results"></div>
+</div>
 
-<h3>3. Изучение литературных источников</h3>
-<p>Я нашел несколько книг и статей по теме метеорологии в библиотеке и справочных ресурсах. Одной из наиболее полезных книг оказалась <em>"Путеводитель по облакам: классификация и характеристики"</em>. В этой книге всесторонне рассматриваются различные виды облаков, включая облака-амфибии, их типичные признаки и условия, в которых они формируются.</p>
-<p>Кроме того, через онлайн-библиотеки, такие как <a href="https://books.google.com" target="_blank">Google Books</a>, я смог найти доступные главы из учебников и научные статьи по данной тематике.</p>
+<script>
+    const googleSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT3oeQ768KbbMYrfrrijNYswWat4GdsDzAa7iRZZ2vLqjvg6zbTQ5Efe1LFn9wRfULaghfYoRGruy1w/pub?output=csv';
 
-<h3>4. Консультация с экспертами</h3>
-<p>Я создал аккаунт на платформе <a href="https://www.researchgate.net" target="_blank">ResearchGate</a> и задал вопросы научным работникам, занимающимся исследованием атмосферы. Это позволило получить дополнительные сведения от профессионалов, которые делились своими наблюдениями и давали рекомендации по дальнейшему изучению облаков-амфибий.</p>
-<p>Также я нашел возможность посетить онлайн-семинар, посвященный малознакомым атмосферным явлениям, в рамках которого выступал профессор метеорологии, который кратко рассказал о своих исследованиях в этой области.</p>
+    let data = [];
+    let headers = [];
 
-<h3>5. Составление отчетности</h3>
-<p>В результате собранные данные были организованы и проанализированы. Обнаружилось, что облака-амфибии являются интересным объектом для изучения из-за их редкости и специфических условий формирования. Также полученные знания могут помочь в улучшении прогнози́рования погоды и понимания климатических изменений.</p>
-<p>Эти результаты позволили лучше понять уникальность облаков-амфибий, их влияние на атмосферные процессы и то, как они вписываются в общую картину формирования погоды и климата.</p>
+    async function loadGoogleSheetData() {
+        document.getElementById('loading').style.display = 'block';
+        try {
+            const response = await fetch(googleSheetURL);
+            if (!response.ok) throw new Error('Ошибка загрузки данных');
+            const csvData = await response.text();
+            parseCSVData(csvData);
+        } catch (error) {
+            console.error(error);
+            alert('Ошибка загрузки данных. Пожалуйста, попробуйте позже.');
+        } finally {
+            document.getElementById('loading').style.display = 'none';
+        }
+    }
 
-<h2>Заключение</h2>
-<p>Исследование необычных атмосферных явлений, таких как облака-амфибии, открывает новые горизонты для понимания динамики атмосферы и является актуальным направлением для дальнейших исследовательских работ. Важно продолжать изучение редких и малоизвестных явлений, чтобы углубить понимание нашей атмосферы и ее взаимодействий с климатом.</p>
+    function parseCSVData(csvData) {
+        const rows = csvData.split('\n').map(row => row.split(','));
+        headers = rows[0].map(header => header.trim());
+        data = rows.slice(1).map(row => {
+            let obj = {};
+            row.forEach((cell, index) => {
+                obj[headers[index]] = cell.trim();
+            });
+            return obj;
+        });
+        populateDropdowns();
+    }
+
+    function populateDropdowns() {
+        const outputColumnsSelect = document.getElementById('output-columns');
+        headers.forEach(header => {
+            const outputOption = document.createElement('option');
+            outputOption.value = header;
+            outputOption.textContent = header;
+            outputColumnsSelect.appendChild(outputOption);
+        });
+    }
+
+    function populateAutocompleteList() {
+        const list = document.getElementById('autocomplete-list');
+        list.innerHTML = ''; // Очистка предыдущих значений
+        const input = document.getElementById('manual-entry').value.trim().toLowerCase();
+
+        if (input) {
+            const filteredData = data.filter(item => 
+                item['ШК 1']?.toLowerCase().includes(input) || 
+                item['ШК 2']?.toLowerCase().includes(input) || 
+                item['ШК 3']?.toLowerCase().includes(input)
+            );
+
+            filteredData.forEach(item => {
+                const barcodeOptions = [item['ШК 1'], item['ШК 2'], item['ШК 3']];
+                barcodeOptions.forEach(barcode => {
+                    if (barcode && barcode.toLowerCase().includes(input)) {
+                        const option = document.createElement('div');
+                        option.classList.add('autocomplete-item');
+                        option.textContent = barcode;
+                        option.addEventListener('click', () => {
+                            document.getElementById('manual-entry').value = barcode;
+                            list.innerHTML = ''; // Скрываем список
+                            searchByBarcode(barcode); // Выполняем поиск сразу
+                        });
+                        list.appendChild(option);
+                    }
+                });
+            });
+        }
+    }
+
+    function speakAddress(address) {
+        const numbers = address.split('-').map(num => num.replace(/^0+/, '')).filter(Boolean); // Удаляем нули и пустые строки
+        const speech = new SpeechSynthesisUtterance(numbers.map(num => {
+            return num.replace(/^0+/, ''); // Убираем ведущие нули
+        }).join(', ')); // Объединяем номера с пробелами между ними
+
+        speech.lang = 'ru-RU'; // Устанавливаем язык
+        speech.rate = 1; // Скорость воспроизведения
+        speech.volume = 1; // Громкость
+
+        window.speechSynthesis.speak(speech);
+    }
+
+    function searchByBarcode(barcode) {
+        const outputColumns = Array.from(document.getElementById('output-columns').selectedOptions)
+            .map(option => option.value);
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.innerHTML = `<p>Сканируемый/вводимый штрих-код: ${barcode}</p>`;
+
+        const filteredData = data.filter(item => 
+            item['ШК 1'] === barcode || 
+            item['ШК 2'] === barcode || 
+            item['ШК 3'] === barcode
+        );
+
+        if (filteredData.length > 0) {
+            let tableHTML = `<table><tr>`;
+            outputColumns.forEach(column => {
+                tableHTML += `<th>${column}</th>`;
+            });
+            tableHTML += `</tr>`;
+
+            filteredData.forEach(item => {
+                tableHTML += `<tr>`;
+                outputColumns.forEach(column => {
+                    tableHTML += `<td>${item[column]}</td>`;
+                });
+                tableHTML += `</tr>`;
+
+                // Если выбранный столбец - адрес, выполняем озвучивание
+                if (column === 'адресс') {
+                    speakAddress(item[column]);
+                }
+            });
+
+            tableHTML += `</table>`;
+            resultsContainer.innerHTML += tableHTML;
+        } else {
+            resultsContainer.innerHTML += '<p>Ничего не найдено</p>';
+        }
+
+        // Очистка поля для нового ввода
+        document.getElementById('manual-entry').value = '';
+        document.getElementById('autocomplete-list').innerHTML = ''; // Скрываем список
+        document.getElementById('manual-entry').focus(); // Устанавливаем фокус обратно на поле ввода
+    }
+
+    document.getElementById('manual-entry').addEventListener('input', function () {
+        populateAutocompleteList(); // Обновляем список при вводе
+
+        // Задать минимальную длину штрих-кода, чтобы выполнять поиск
+        if (this.value.length >= 13) {
+            searchByBarcode(this.value.trim()); // Используем trim для удаления лишних пробелов
+        }
+    });
+
+    document.getElementById('manual-entry').addEventListener('blur', function () {
+        setTimeout(() => {
+            document.getElementById('autocomplete-list').innerHTML = ''; // Скрываем список при уходе фокуса
+        }, 100);
+    });
+
+    loadGoogleSheetData();
+</script>
 
 </body>
 </html>
