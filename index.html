@@ -6,102 +6,7 @@
     <title>Автозаполнение по штрих-коду</title>
     <script src="https://unpkg.com/quagga/dist/quagga.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; 
-            height: 100vh; 
-            margin: 0; 
-            background-color: #f0f4f7; 
-            padding-top: 20px; 
-        }
-
-        h1 {
-            color: #333; 
-            margin-bottom: 20px; 
-            font-size: 24px; 
-        }
-
-        label {
-            font-weight: bold; 
-            margin-bottom: 5px; 
-        }
-
-        #output-columns {
-            width: 100%;
-            max-width: 640px; 
-            padding: 5px; 
-            margin: 10px 0; 
-            border: 1px solid #ccc; 
-            border-radius: 5px; 
-        }
-
-        input[type="text"] {
-            width: 100%;
-            max-width: 640px; 
-            padding: 10px; 
-            margin-top: 10px; 
-            border: 1px solid #ccc; 
-            border-radius: 5px; 
-            font-size: 16px; 
-        }
-
-        .autocomplete-items {
-            position: absolute;
-            border: 1px solid #d4d4d4; 
-            background-color: #fff; 
-            max-height: 150px; 
-            overflow-y: auto; 
-            width: calc(100% - 2px); 
-            z-index: 1000; 
-            border-radius: 5px; 
-        }
-
-        .autocomplete-item {
-            padding: 10px; 
-            cursor: pointer; 
-            background-color: #fff; 
-            border-bottom: 1px solid #d4d4d4; 
-        }
-
-        .autocomplete-item:hover {
-            background-color: #e9e9e9; 
-        }
-
-        #loading {
-            display: none; 
-            margin-top: 20px; 
-        }
-
-        #result {
-            width: 100%;
-            max-width: 640px; 
-            text-align: center; 
-            margin-top: 20px; 
-        }
-
-        table {
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-top: 20px; 
-        }
-
-        th, td {
-            border: 1px solid #ddd; 
-            padding: 8px; 
-            text-align: left; 
-        }
-
-        th {
-            background-color: #f2f2f2; 
-            font-weight: bold; 
-        }
+        /* Ваша текущая стилизация */
     </style>
 </head>
 <body>
@@ -128,137 +33,66 @@
     let headers = [];
 
     async function loadGoogleSheetData() {
-        document.getElementById('loading').style.display = 'block';
-        try {
-            const response = await fetch(googleSheetURL);
-            if (!response.ok) throw new Error('Ошибка загрузки данных');
-            const csvData = await response.text();
-            parseCSVData(csvData);
-        } catch (error) {
-            console.error(error);
-            alert('Ошибка загрузки данных. Пожалуйста, попробуйте позже.');
-        } finally {
-            document.getElementById('loading').style.display = 'none';
-        }
+        // Ваша функция по загрузке данных
     }
 
     function parseCSVData(csvData) {
-        const rows = csvData.split('\n').map(row => row.split(','));
-        headers = rows[0].map(header => header.trim());
-        data = rows.slice(1).map(row => {
-            let obj = {};
-            row.forEach((cell, index) => {
-                obj[headers[index]] = cell.trim();
-            });
-            return obj;
-        });
-        populateDropdowns();
+        // Ваша функция для парсинга CSV
     }
 
     function populateDropdowns() {
-        const outputColumnsSelect = document.getElementById('output-columns');
-        headers.forEach(header => {
-            const outputOption = document.createElement('option');
-            outputOption.value = header;
-            outputOption.textContent = header;
-            outputColumnsSelect.appendChild(outputOption);
-        });
+        // Ваша функция для заполнения выпадающего списка
     }
 
     function speakResult(text) {
-        const formattedText = text.replace(/[^a-zA-Z0-9а-яА-ЯёЁ\s]/g, ''); // Убираем знаки препинания
-        const speech = new SpeechSynthesisUtterance(formattedText);
-        speech.lang = 'ru-RU'; // Устанавливаем язык
-        speech.rate = 1; // Скорость воспроизведения
-        speech.volume = 1; // Громкость
-
-        window.speechSynthesis.speak(speech);
+        // Ваша функция для озвучивания текста
     }
 
     function numberToText(num) {
-        const units = ['', 'один', 'два', 'три', 'четыре', 'пять', 
-            'шесть', 'семь', 'восемь', 'девять', 'десять', 
-            'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 
-            'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 
-            'девятнадцать'];
-        
-        const tens = ['', '', 'двадцать', 'тридцать', 'сорок', 
-            'пятьдесят', 'шестьдесят', 'семьдесят', 
-            'восемьдесят', 'девяносто'];
+        // Ваша функция для преобразования числа в текст
+    }
 
-        if (num < 20) {
-            return units[num];
-        } else if (num < 100) {
-            const unit = num % 10;
-            const ten = Math.floor(num / 10);
-            return `${tens[ten]} ${units[unit]}`.trim();
-        }
-        return '';
+    function updateAutocompleteList(value) {
+        const autocompleteList = document.getElementById('autocomplete-list');
+        autocompleteList.innerHTML = ''; // Очистить предыдущие результаты
+
+        if (!value) return; // Если нет значения, выйти
+
+        const filteredData = data.filter(item => 
+            item['ШК 1'].includes(value) || 
+            item['ШК 2'].includes(value) || 
+            item['ШК 3'].includes(value)
+        );
+
+        filteredData.forEach(item => {
+            const div = document.createElement('div');
+            const barcode = item['ШК 1'] || item['ШК 2'] || item['ШК 3'];
+            div.textContent = barcode;
+            div.addEventListener('click', () => {
+                document.getElementById('manual-entry').value = barcode; // Заполнение поля
+                autocompleteList.innerHTML = ''; // Скрыть список
+                searchByBarcode(barcode); // Выполнить поиск
+            });
+            autocompleteList.appendChild(div);
+        });
     }
 
     function searchByBarcode(barcode) {
-        const outputColumns = Array.from(document.getElementById('output-columns').selectedOptions)
-            .map(option => option.value);
-        const resultsContainer = document.getElementById('search-results');
-        resultsContainer.innerHTML = `<p>Сканируемый/вводимый штрих-код: ${barcode}</p>`;
-
-        const filteredData = data.filter(item => 
-            item['ШК 1'] === barcode || 
-            item['ШК 2'] === barcode || 
-            item['ШК 3'] === barcode
-        );
-
-        if (filteredData.length > 0) {
-            let tableHTML = `<table><tr>`;
-            outputColumns.forEach(column => {
-                tableHTML += `<th>${column}</th>`;
-            });
-            tableHTML += `</tr>`;
-
-            filteredData.forEach(item => {
-                tableHTML += `<tr>`;
-                outputColumns.forEach(column => {
-                    tableHTML += `<td>${item[column]}</td>`;
-                    
-                    // Если выбранный столбец - это колонка чисел, озвучиваем
-                    if (column.toLowerCase() === 'адрес') {
-                        const value = item[column];
-                        const numericValue = parseInt(value);
-                        if (!isNaN(numericValue) && numericValue >= 10 && numericValue < 100) {
-                            speakResult(numberToText(numericValue)); // произносит двузначное число
-                        } else {
-                            speakResult(value); // произносит текстовое представление
-                        }
-                    }
-                });
-                tableHTML += `</tr>`;
-            });
-
-            tableHTML += `</table>`;
-            resultsContainer.innerHTML += tableHTML;
-        } else {
-            resultsContainer.innerHTML += '<p>Ничего не найдено</p>';
-        }
-
-        // Очистка поля для нового ввода
-        document.getElementById('manual-entry').value = '';
-        document.getElementById('autocomplete-list').innerHTML = ''; // Скрываем список
-        document.getElementById('manual-entry').focus(); // Устанавливаем фокус обратно на поле ввода
+        // Ваша функция для поиска
     }
 
     document.getElementById('manual-entry').addEventListener('input', function () {
-        // Задать минимальную длину штрих-кода, чтобы выполнять поиск
         const inputValue = this.value.trim();
-        if (inputValue.length >= 13) {
-            searchByBarcode(inputValue);
+        if (inputValue.length >= 1) { // Условие, когда показывать выпадающий список
+            updateAutocompleteList(inputValue);
+        } else {
+            document.getElementById('autocomplete-list').innerHTML = ''; // Очистить список, если пусто
         }
-
-        populateAutocompleteList(); // Обновляем список при вводе
     });
 
     document.getElementById('manual-entry').addEventListener('blur', function () {
         setTimeout(() => {
-            document.getElementById('autocomplete-list').innerHTML = ''; // Скрываем список при уходе фокуса
+            document.getElementById('autocomplete-list').innerHTML = ''; // Скрыть список при уходе фокуса
         }, 100);
     });
 
