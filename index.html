@@ -196,12 +196,9 @@
         }
     }
 
-    function speakAddress(address) {
-        const numbers = address.split('-').map(num => num.replace(/^0+/, '')).filter(Boolean); // Удаляем нули и пустые строки
-        const speech = new SpeechSynthesisUtterance(numbers.map(num => {
-            return num.replace(/^0+/, ''); // Убираем ведущие нули
-        }).join(', ')); // Объединяем номера с пробелами между ними
-
+    function speakResult(text) {
+        const formattedText = text.replace(/[^a-zA-Z0-9а-яА-ЯёЁ\s]/g, ''); // Убираем знаки препинания
+        const speech = new SpeechSynthesisUtterance(formattedText);
         speech.lang = 'ru-RU'; // Устанавливаем язык
         speech.rate = 1; // Скорость воспроизведения
         speech.volume = 1; // Громкость
@@ -232,13 +229,12 @@
                 tableHTML += `<tr>`;
                 outputColumns.forEach(column => {
                     tableHTML += `<td>${item[column]}</td>`;
+                    // Если выбранный столбец - адресс, озвучиваем
+                    if (column.toLowerCase() === 'адресс') {
+                        speakResult(item[column]);
+                    }
                 });
                 tableHTML += `</tr>`;
-
-                // Если выбранный столбец - адрес, выполняем озвучивание
-                if (column === 'адресс') {
-                    speakAddress(item[column]);
-                }
             });
 
             tableHTML += `</table>`;
