@@ -165,37 +165,6 @@
         });
     }
 
-    function populateAutocompleteList() {
-        const list = document.getElementById('autocomplete-list');
-        list.innerHTML = ''; // Очистка предыдущих значений
-        const input = document.getElementById('manual-entry').value.trim().toLowerCase();
-
-        if (input) {
-            const filteredData = data.filter(item => 
-                item['ШК 1']?.toLowerCase().includes(input) || 
-                item['ШК 2']?.toLowerCase().includes(input) || 
-                item['ШК 3']?.toLowerCase().includes(input)
-            );
-
-            filteredData.forEach(item => {
-                const barcodeOptions = [item['ШК 1'], item['ШК 2'], item['ШК 3']];
-                barcodeOptions.forEach(barcode => {
-                    if (barcode && barcode.toLowerCase().includes(input)) {
-                        const option = document.createElement('div');
-                        option.classList.add('autocomplete-item');
-                        option.textContent = barcode;
-                        option.addEventListener('click', () => {
-                            document.getElementById('manual-entry').value = barcode;
-                            list.innerHTML = ''; // Скрываем список
-                            searchByBarcode(barcode); // Выполняем поиск сразу
-                        });
-                        list.appendChild(option);
-                    }
-                });
-            });
-        }
-    }
-
     function speakResult(text) {
         const formattedText = text.replace(/[^a-zA-Z0-9а-яА-ЯёЁ\s]/g, ''); // Убираем знаки препинания
         const speech = new SpeechSynthesisUtterance(formattedText);
@@ -204,6 +173,30 @@
         speech.volume = 1; // Громкость
 
         window.speechSynthesis.speak(speech);
+    }
+
+    function numberToText(num) {
+        const units = [
+            '', 'один', 'два', 'три', 'четыре', 'пять', 
+            'шесть', 'семь', 'восемь', 'девять', 'десять', 
+            'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 
+            'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 
+            'девятнадцать', 
+        ];
+        const tens = [
+            '', '', 'двадцать', 'тридцать', 'сорок', 
+            'пятьдесят', 'шестьдесят', 'семьдесят', 
+            'восемьдесят', 'девяносто'
+        ];
+
+        if (num < 20) {
+            return units[num];
+        } else if (num < 100) {
+            const unit = num % 10;
+            const ten = Math.floor(num / 10);
+            return `${tens[ten]} ${units[unit]}`.trim();
+        }
+        return '';
     }
 
     function searchByBarcode(barcode) {
@@ -229,9 +222,15 @@
                 tableHTML += `<tr>`;
                 outputColumns.forEach(column => {
                     tableHTML += `<td>${item[column]}</td>`;
-                    // Если выбранный столбец - адресс, озвучиваем
-                    if (column.toLowerCase() === 'адресс') {
-                        speakResult(item[column]);
+                    // Если выбранный столбец - адрес, озвучиваем
+                    if (column.toLowerCase() === 'адрес') {
+                        // Проверяем, является ли значение числом
+                        const value = item[column];
+                        if (!isNaN(value) && value.length === 2) {
+                            speakResult(numberToText(parseInt(value)));
+                        } else {
+                            speakResult(value);
+                        }
                     }
                 });
                 tableHTML += `</tr>`;
