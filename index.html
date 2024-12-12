@@ -251,7 +251,7 @@
                 outputColumns.forEach(column => {
                     tableHTML += `<td>${item[column]}</td>`;
                     // Если выбранный столбец - адрес, озвучиваем
-                    if (column.toLowerCase() === 'адресс') {
+                    if (column.toLowerCase() === 'адрес') {
                         speakResult(item[column]);
                     }
                 });
